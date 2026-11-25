@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#10131c">
+  <meta name="description" content="Agent Mina — личный ИИ-помощник">
+  <title>Agent Mina</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%237b8cff'/%3E%3Ctext x='50' y='68' text-anchor='middle' font-size='62' fill='white'%3EM%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">M</div>
+      <div class="brand-copy"><strong>Agent Mina</strong><small>PERSONAL AI ASSISTANT</small></div>
+      <button class="icon-btn close-sidebar" id="closeSidebar" aria-label="Закрыть меню">×</button>
+    </div>
+    <button class="new-chat" id="newChat"><span>＋</span> Новый чат</button>
+    <div class="side-label">РАБОЧЕЕ ПРОСТРАНСТВО</div>
+    <button class="side-link active" data-page="chat"><span>◫</span> Чат</button>
+    <button class="side-link" data-page="history"><span>◷</span> История</button>
+    <button class="side-link" data-page="tools"><span>⌘</span> Возможности</button>
+    <button class="side-link" data-page="settings"><span>⚙</span> Настройки</button>
+    <div class="sidebar-bottom">
+      <div class="online-dot"></div>
+      <div><b id="connectionLabel">Готова к работе</b><small>Модель подключается через Worker</small></div>
+    </div>
+  </aside>
+
+  <div class="scrim" id="scrim"></div>
+
+  <main class="main">
+    <header class="topbar">
+      <button class="icon-btn menu-btn" id="menuButton" aria-label="Открыть меню">☰</button>
+      <div class="topbar-title" id="topbarTitle">Новый разговор</div>
+      <div class="topbar-right"><span class="status-pill"><i></i> Mina v0.1</span></div>
+    </header>
+
+    <section class="page active" id="chatPage">
+      <div class="chat-scroll" id="chatScroll">
+        <div class="welcome" id="welcome">
+          <div class="mina-orb"><span>M</span><i></i></div>
+          <div class="eyebrow">ТВОЙ ЛИЧНЫЙ ПОМОЩНИК</div>
+          <h1>Привет! Я <span>Мина</span>.</h1>
+          <p>Пиши, что нужно сделать. Я помогу разобраться, составить план или выполнить доступные действия.</p>
+          <div class="suggestions">
+            <button class="suggestion" data-prompt="Помоги придумать идею для небольшого проекта">✦ Придумать идею</button>
+            <button class="suggestion" data-prompt="Объясни простыми словами, как работает искусственный интеллект">⌁ Объяснить тему</button>
+            <button class="suggestion" data-prompt="Составь простой план на сегодня">☷ Составить план</button>
+          </div>
+        </div>
+        <div class="messages" id="messages" aria-live="polite"></div>
+      </div>
+
+      <div class="composer-wrap">
+        <div class="composer">
+          <textarea id="messageInput" rows="1" maxlength="5000" placeholder="Напиши Мине поручение..." aria-label="Сообщение Мине"></textarea>
+          <div class="composer-bottom">
+            <div class="composer-note"><span class="spark">✦</span> Мина может ошибаться — проверяй важные сведения</div>
+            <button class="send-btn" id="sendButton" aria-label="Отправить сообщение"><span>Отправить</span><b>↑</b></button>
+          </div>
+        </div>
+        <div class="disclaimer">Пока Мина отвечает через ИИ. Управление приложениями появится после подключения Android Bridge.</div>
+      </div>
+    </section>
+
+    <section class="page content-page" id="historyPage">
+      <div class="page-heading"><div class="eyebrow">ТВОИ РАЗГОВОРЫ</div><h1>История</h1><p>Разговоры сохраняются в памяти браузера на этом устройстве.</p></div>
+      <div class="history-list" id="historyList"></div>
+    </section>
+
+    <section class="page content-page" id="toolsPage">
+      <div class="page-heading"><div class="eyebrow">ЧТО УМЕЕТ МИНА</div><h1>Возможности</h1><p>Сейчас доступна первая версия. Новые инструменты будем подключать постепенно.</p></div>
+      <div class="feature-grid">
+        <article class="feature-card"><div class="feature-icon">✦</div><h3>Умный чат</h3><p>Общение с ИИ через подключённую модель, с характером и инструкциями Мины.</p><span class="feature-state ready">ДОСТУПНО</span></article>
+        <article class="feature-card"><div class="feature-icon">◷</div><h3>Память чатов</h3><p>Сохранение истории разговоров в браузере на устройстве.</p><span class="feature-state ready">ДОСТУПНО</span></article>
+        <article class="feature-card"><div class="feature-icon">▣</div><h3>Запуск приложений</h3><p>Открытие приложений Android по твоему поручению.</p><span class="feature-state planned">ПОЗЖЕ · ANDROID BRIDGE</span></article>
+        <article class="feature-card"><div class="feature-icon">▤</div><h3>Работа с файлами</h3><p>Выбор, чтение и сохранение файлов с разрешения пользователя.</p><span class="feature-state planned">ПОЗЖЕ · ANDROID BRIDGE</span></article>
+      </div>
+    </section>
+
+    <section class="page content-page" id="settingsPage">
+      <div class="page-heading"><div class="eyebrow">КОНФИГУРАЦИЯ</div><h1>Настройки</h1><p>Подключение к твоему Cloudflare Worker и управление локальными данными.</p></div>
+      <div class="settings-card">
+        <div class="settings-title"><div><h2>Подключение ИИ</h2><p>Сервер AI Video Brain, который теперь работает для Мины.</p></div><span class="tag">CLOUDFLARE</span></div>
+        <label for="workerUrl">Адрес Worker</label>
+        <input id="workerUrl" type="url" autocomplete="url" spellcheck="false">
+        <label for="studioToken">STUDIO_TOKEN</label>
+        <input id="studioToken" type="password" autocomplete="off" placeholder="Введи токен Worker">
+        <p class="field-help">Токен хранится только в памяти текущей вкладки и не записывается в файлы сайта или историю чата. После перезагрузки его нужно ввести снова.</p>
+        <div class="settings-actions"><button class="secondary-btn" id="testConnection">Проверить подключение</button><span id="connectionStatus" role="status">Не проверено</span></div>
+      </div>
+      <div class="settings-card">
+        <div class="settings-title"><div><h2>Данные</h2><p>История разговоров хранится локально в браузере.</p></div></div>
+        <div class="settings-actions"><button class="secondary-btn" id="exportChats">Экспорт истории</button><button class="danger-btn" id="clearChats">Очистить историю</button></div>
+      </div>
+      <div class="settings-card about-card">
+        <div class="settings-title"><div><h2>Характер Мины</h2><p>Дружелюбная, сообразительная, энергичная и с лёгким чувством юмора. Отвечает по делу, не выдумывает выполненные действия и честно говорит об ограничениях.</p></div><div class="mina-mini">M</div></div>
+      </div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script src="app.js?v=0.1.0" defer></script>
+</body>
+</html>
