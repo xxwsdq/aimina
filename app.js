@@ -1,5 +1,5 @@
 
-/* Agent Mina v0.2 — chat + Android Bridge */
+/* Agent Mina v0.3 — chat + Android Bridge */
 "use strict";
 
 (() => {
@@ -260,20 +260,28 @@
     $("connectionLabel").textContent = busy ? "Мина думает…" : "Готова к работе";
   }
 
-  // Распознаём только одну разрешённую команду.
+  // Распознавание команды открытия ibis Paint X.
+  // Русские границы слов обрабатываются без \b.
   function detectAndroidCommand(text) {
-    const normalized = text.toLowerCase().replace(/ё/g, "е");
+    const normalized = text
+      .toLowerCase()
+      .replace(/ё/g, "е")
+      .trim();
 
     const asksToOpen =
-      /\b(открой|запусти|включи)\b/.test(normalized);
+      /(^|[^а-яa-z0-9])(открой|запусти|включи)(?=$|[^а-яa-z0-9])/.test(normalized);
 
     const mentionsIbis =
-      normalized.includes("ibis paint") ||
+      /ibis\s*paint/.test(normalized) ||
       normalized.includes("ибис пэйнт") ||
       normalized.includes("ибис паинт") ||
       normalized.includes("ибис");
 
-    return asksToOpen && mentionsIbis ? "open_ibis" : null;
+    if (asksToOpen && mentionsIbis) {
+      return "open_ibis";
+    }
+
+    return null;
   }
 
   function sendAndroidCommand(action) {
@@ -281,7 +289,7 @@
 
     toast("Передаю команду Android Bridge…");
 
-    // Пользователь должен подтвердить запуск уже в Android Bridge.
+    // Запуск Bridge. Подтверждение выполняется внутри Android-приложения.
     window.location.href = "mina://launch?action=open_ibis";
     return true;
   }
@@ -296,6 +304,8 @@
     resizeInput();
     addMessage("user", text);
 
+    // Сначала проверяем Android-команду.
+    // Если команда распознана, Gemma вообще не вызывается.
     const command = detectAndroidCommand(text);
 
     if (command) {
@@ -303,6 +313,7 @@
         "assistant",
         "Поняла! Передаю команду на открытие ibis Paint X. Подтверди запуск в приложении Mina Android Bridge."
       );
+
       sendAndroidCommand(command);
       return;
     }
@@ -541,4 +552,4 @@
 
   renderChat();
 })();
-      
+        
